@@ -1,0 +1,81 @@
+ <nz-card class="issue-card" style="border: 4px solid black">
+      <div class="top">
+        <app-status-badge [status]="issue.status"></app-status-badge>
+        <nz-tag>{{ teamName }}</nz-tag>
+        <span class="date">{{ issue.createdAt | date:'MM/dd/yyyy' }}</span>
+      </div>
+      <div class="title">{{ issue.title }}</div>
+
+      <div class="desc" [class.clamped]="!expanded">
+        {{ issue.description }}
+      </div>
+
+      <div class="meta">
+        <nz-tag nzColor="default">{{ issue.reporterName }}</nz-tag>
+        <nz-tag nzColor="default">{{ categoryLabel }}</nz-tag>
+      </div>
+
+      <div class="show-more">
+        <button nz-button nzType="link" (click)="toggleExpanded()">
+          {{ expanded ? 'Show Less' : 'Show More' }}
+        </button>
+      </div>
+
+      <div class="actions">
+        <button nz-button class="edit-btn" (click)="openEdit()">
+          Edit Status/Team
+        </button>
+
+        <button
+          nz-button
+          nzType="primary"
+          class="jira-btn"
+          [disabled]="issue.jira.status === 'SENT'"
+          (click)="sendToJira.emit(issue.id)"
+        >
+          {{ jiraButtonLabel }}
+        </button>
+      </div>
+
+      <div class="jira-state" *ngIf="issue.jira.status === 'SENT' && issue.jira.key">
+        <nz-tag nzColor="green">{{ issue.jira.key }}</nz-tag>
+      </div>
+
+      <div class="jira-state" *ngIf="issue.jira.status === 'FAILED'">
+        <nz-tag nzColor="red">Jira failed — retry</nz-tag>
+      </div>
+    </nz-card>
+
+    <nz-modal
+      [(nzVisible)]="editVisible"
+      nzTitle="Edit Status/Team"
+      (nzOnCancel)="closeEdit()"
+      (nzOnOk)="saveEdit()"
+      [nzOkDisabled]="editForm.invalid"
+    >
+      <form nz-form [formGroup]="editForm">
+        <nz-form-item>
+          <nz-form-label>Status</nz-form-label>
+          <nz-form-control>
+            <nz-select formControlName="status">
+                <!-- <nz-option nzValue="" nzLabel="All Statuses"></nz-option> -->
+                <nz-option *ngFor="let t of statusCategories" [nzValue]="t.id" [nzLabel]="t.label"></nz-option>
+            </nz-select>
+            <!-- <nz-select formControlName="status">
+              <nz-option nzValue="NEW" nzLabel="New"></nz-option>
+              <nz-option nzValue="IN_PROGRESS" nzLabel="In Progress"></nz-option>
+              <nz-option nzValue="RESOLVED" nzLabel="Resolved"></nz-option>
+            </nz-select> -->
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label>Team</nz-form-label>
+          <nz-form-control>
+            <nz-select formControlName="teamId">
+              <nz-option *ngFor="let t of teams" [nzValue]="t.id" [nzLabel]="t.name"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </nz-modal>

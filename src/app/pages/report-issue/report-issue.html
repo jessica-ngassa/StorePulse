@@ -1,0 +1,82 @@
+ <div class="page">
+      <nz-card class="card">
+        <div class="title">Report an Issue</div>
+        <div class="subtitle">Describe the problem you're experiencing with the store app</div>
+
+        <form nz-form [formGroup]="form" (ngSubmit)="submit()">
+
+             <nz-form-item>
+            <nz-form-label [nzRequired]="true">Store Number</nz-form-label>
+            <nz-form-control nzErrorTip="Store Number is required">
+              <input nz-input formControlName="storeNumber" placeholder="1111" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzRequired]="true">Your Name</nz-form-label>
+            <nz-form-control nzErrorTip="Name is required">
+              <input nz-input formControlName="reporterName" placeholder="John Doe" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzRequired]="true">Issue Title</nz-form-label>
+            <nz-form-control nzErrorTip="Title is required">
+              <input nz-input formControlName="title" placeholder="Brief description of the issue" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzRequired]="true">Issue Category</nz-form-label>
+            <nz-form-control nzErrorTip="Category is required">
+              <nz-select formControlName="categoryId" nzPlaceHolder="Select a category">
+                <nz-option *ngFor="let c of categories" [nzValue]="c.id" [nzLabel]="c.label"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzRequired]="true">Detailed Description</nz-form-label>
+            <nz-form-control nzErrorTip="Description is required">
+              <textarea
+                nz-input
+                formControlName="description"
+                rows="4"
+                placeholder="Include steps to reproduce, error messages, and any relevant information."
+              ></textarea>
+            </nz-form-control>
+          </nz-form-item>
+
+          <div class="upload-block">
+            <div class="upload-label">Photos (Optional)</div>
+            <nz-upload
+              [nzBeforeUpload]="beforeUploadImage"
+              [nzMultiple]="true"
+              [nzShowUploadList]="true"
+            >
+              <button nz-button type="button">Upload Photos</button>
+            </nz-upload>
+          </div>
+
+          <div class="upload-block">
+            <div class="upload-label">Videos (Optional)</div>
+            <nz-upload
+              [nzBeforeUpload]="beforeUploadVideo"
+              [nzMultiple]="true"
+              [nzShowUploadList]="true"
+            >
+              <button nz-button type="button">Upload Videos</button>
+            </nz-upload>
+          </div>
+
+          <button
+            nz-button
+            nzType="primary"
+            class="submit"
+            [disabled]="form.invalid"
+          >
+            Submit Issue Report
+          </button>
+        </form>
+      </nz-card>
+    </div>

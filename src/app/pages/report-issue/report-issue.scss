@@ -1,0 +1,29 @@
+.page {
+  width: 720px;
+  max-width: calc(100vw - 32px);
+}
+.card {
+  border-radius: 12px;
+}
+.title {
+  font-weight: 600;
+}
+.subtitle {
+  color: #666;
+  font-size: 12px;
+  margin: 4px 0 16px;
+}
+.upload-block {
+  margin: 12px 0;
+}
+.upload-label {
+  font-size: 12px;
+  color: #444;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.submit {
+  width: 100%;
+  margin-top: 10px;
+  border-radius: 10px;
+}

@@ -1,0 +1,40 @@
+ .issue-card {
+     border-radius: 12px;
+ }
+
+ .top {
+     display: flex;
+     align-items: center;
+     gap: 10px;
+ }
+
+ .date {
+     margin-left: auto;
+     color: #999;
+     font-size: 12px;
+ }
+
+ .title {
+     font-weight: 600;
+     margin-top: 10px;
+ }
+
+ .desc {
+     color: #666;
+     margin-top: 6px;
+ }
+
+ .meta {
+     margin-top: 10px;
+     display: flex;
+     gap: 8px;
+     flex-wrap: wrap;
+ }
+
+ .actions {
+     margin-top: 12px;
+ }
+
+ .select {
+     width: 160px;
+ }
