@@ -1,0 +1,279 @@
+.nav-container {
+  background-color: white;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.nav-content {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .nav-content {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .nav-content {
+    padding: 0 2rem;
+  }
+}
+
+.nav-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 4rem;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo-icon {
+  background-color: #f97316;
+  padding: 0.375rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(249, 115, 22, 0.2);
+}
+
+.logo-icon span {
+  color: white;
+  font-size: 1.125rem;
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo-title {
+  font-size: 1.25rem;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  color: #111827;
+  line-height: 1;
+}
+
+.logo-subtitle {
+  font-size: 10px;
+  font-weight: 700;
+  color: #ea580c;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.store-ops {
+  display: none;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+@media (min-width: 640px) {
+  .store-ops {
+    display: flex;
+  }
+}
+
+.store-ops-content {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: #ea580c;
+}
+
+.store-ops-content span {
+  font-size: 1rem;
+}
+
+.divider {
+  height: 2rem;
+  width: 1px;
+  background-color: #e5e7eb;
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .divider {
+    display: block;
+  }
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-right: 0.25rem;
+}
+
+.user-name {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1;
+}
+
+.user-role {
+  font-size: 10px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.user-avatar {
+  height: 2.25rem;
+  width: 2.25rem;
+  border: 2px solid #fed7aa;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  background-color: #f97316;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 900;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logout-btn {
+  padding: 0.5rem;
+  color: #9ca3af;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.logout-btn:hover {
+  color: #dc2626;
+  background-color: #fef2f2;
+}
+
+.explorer-section {
+  background-color: white;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.explorer-content {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .explorer-content {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .explorer-content {
+    padding: 0 2rem;
+  }
+}
+
+.explorer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 0;
+  gap: 1.5rem;
+}
+
+.explorer-left {
+  flex: 1;
+}
+
+.explorer-title {
+  font-size: 1.875rem;
+  font-weight: 900;
+  color: #111827;
+  margin: 0 0 0.25rem 0;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+}
+
+.explorer-subtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 500;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stat-dot {
+  width: 4px;
+  height: 4px;
+  background-color: #d1d5db;
+  border-radius: 50%;
+}
+
+.stat-orange {
+  color: #ea580c;
+  font-weight: 700;
+}
+
+.stat-blue {
+  color: #2563eb;
+  font-weight: 700;
+}
+
+.explorer-right {
+  flex-shrink: 0;
+}
+
+.report-btn {
+  background-color: #ea580c;
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  font-size: 0.875rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(234, 88, 12, 0.2);
+  transition: all 0.2s;
+}
+
+.report-btn:hover {
+  background-color: #c2410c;
+  transform: scale(1.02);
+}
+
+.report-btn:active {
+  transform: scale(0.98);
+}

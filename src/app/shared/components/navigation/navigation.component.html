@@ -1,0 +1,66 @@
+<!-- Top Navigation Bar -->
+<nav class="nav-container">
+  <div class="nav-content">
+    <div class="nav-inner">
+      <div class="nav-left">
+        <div class="logo-section">
+          <div class="logo-icon">
+            <span nz-icon nzType="tool" nzTheme="outline"></span>
+          </div>
+          <div class="logo-text">
+            <span class="logo-title">IssueTracker</span>
+            <span class="logo-subtitle">Internal Tool</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-right">
+        <div class="store-ops">
+          <div class="store-ops-content">
+            <span nz-icon nzType="shop" nzTheme="outline"></span>
+            Store Operations
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="user-section">
+          <div class="user-info">
+            <span class="user-name">{{ user?.name }}</span>
+            <span class="user-role">L-4 Associate</span>
+          </div>
+          <div class="user-avatar">
+            {{ getInitials() }}
+          </div>
+          <button class="logout-btn" (click)="onLogout()">
+            <span nz-icon nzType="logout" nzTheme="outline"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Issue Explorer Section -->
+<div class="explorer-section">
+  <div class="explorer-content">
+    <div class="explorer-inner">
+      <div class="explorer-left">
+        <h1 class="explorer-title">Issue Explorer</h1>
+        <p class="explorer-subtitle">
+          Manage reported issues for your store locations
+          <span class="stat-dot"></span>
+          <span class="stat-orange">{{ totalReports }} Total Reports</span>
+          <span class="stat-dot"></span>
+          <span class="stat-blue">{{ sentToJira }} Sent to Jira</span>
+        </p>
+      </div>
+      <div class="explorer-right">
+        <button class="report-btn" (click)="onReportIssue()">
+          <span nz-icon nzType="plus" nzTheme="outline"></span>
+          Report New Issue
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

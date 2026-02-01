@@ -1,0 +1,65 @@
+<div class="login-container">
+  <div class="login-content">
+    <!-- Logo and Title -->
+    <div class="logo-section">
+      <div class="logo-wrapper">
+        <div class="logo-icon">
+          <span nz-icon nzType="tool" nzTheme="outline"></span>
+        </div>
+        <h1 class="app-title">IssueTracker</h1>
+      </div>
+    </div>
+
+    <!-- Login Card -->
+    <nz-card class="login-card">
+      <div class="card-header">
+        <h2 class="card-title">Internal Single Sign-On</h2>
+        <p class="card-description">
+          Sign in with your Home Depot corporate credentials
+        </p>
+      </div>
+
+      <form nz-form [formGroup]="loginForm"
+            (ngSubmit)="onSubmit()" class="login-form">
+        <div>
+          <nz-form-label nzRequired>LDAP / Email Address</nz-form-label>
+        </div>
+        <div>
+          <nz-form-control>
+            <input
+              nz-input
+              formControlName="email"
+              type="email"
+              placeholder="jsmith@homedepot.com"
+              class="email-input"
+            />
+          </nz-form-control>
+        </div>
+
+        <button
+          nz-button
+          nzType="primary"
+          nzSize="large"
+          nzBlock
+          [nzLoading]="isLoading"
+          [disabled]="isLoading"
+          class="sso-button"
+        >
+          <span nz-icon nzType="safety-certificate" *ngIf="!isLoading"></span>
+          Continue with SSO
+        </button>
+      </form>
+
+      <div class="card-footer">
+        <p class="disclaimer">
+          This system is for authorized users only. Unauthorized access is strictly prohibited and monitored.
+        </p>
+      </div>
+    </nz-card>
+
+    <!-- Copyright -->
+    <div class="copyright">
+      <p>© 2026 Home Depot. All rights reserved.</p>
+    </div>
+  </div>
+</div>

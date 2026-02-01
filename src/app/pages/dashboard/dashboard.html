@@ -1,53 +1,91 @@
-<div class="page">
-    <div class="metrics">
-        <app-metrics-card label="Total Issues" [value]="totals().total"></app-metrics-card>
-        <app-metrics-card label="New" [value]="totals().new"></app-metrics-card>
-        <app-metrics-card label="In Progress" [value]="totals().inProgress"></app-metrics-card>
-        <app-metrics-card label="Resolved" [value]="totals().resolved"></app-metrics-card>
-    </div>
+<div class="dashboard-container">
+  <!-- Navigation -->
+  <app-navigation
+    [user]="currentUser$ | async"
+    [totalReports]="(dashboardData$ | async)?.totalReports || 0"
+    [sentToJira]="(dashboardData$ | async)?.sentToJira || 0"
+    (logout)="onLogout()"
+    (reportIssue)="onReportIssue()">
+  </app-navigation>
 
-    <nz-card class="board" style="border: 4px solid blue">
-        <div class="board-title">Issues Dashboard</div>
-        <div class="board-subtitle">View and manage reported issues</div>
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="content-wrapper">
+      <!-- Dashboard Stats Section -->
+      <div class="stats-layout">
+        <div class="stats-main">
+          <nz-card class="stat-card">
+            <div class="stat-content">
+              <div class="stat-info">
+                <p class="stat-title">TOTAL REPORTS</p>
+                <p class="stat-value orange">{{ (dashboardData$ | async)?.totalReports || 0 }}</p>
+              </div>
+              <div class="stat-icon orange">
+                <span nz-icon nzType="file-text" nzTheme="outline"></span>
+              </div>
+            </div>
+          </nz-card>
 
-        <div class="filters" style="border: 4px solid rgb(216, 98, 55)">
-            <nz-select class="f" [(ngModel)]="teamFilter">
-                <nz-option nzValue="" nzLabel="All Teams"></nz-option>
-                <nz-option *ngFor="let t of teams" [nzValue]="t.id" [nzLabel]="t.name"></nz-option>
-            </nz-select>
+          <nz-card class="stat-card">
+            <div class="stat-content">
+              <div class="stat-info">
+                <p class="stat-title">ACTIVE ISSUES</p>
+                <p class="stat-value yellow">{{ (dashboardData$ | async)?.activeIssues || 0 }}</p>
+              </div>
+              <div class="stat-icon yellow">
+                <span nz-icon nzType="exclamation-circle" nzTheme="outline"></span>
+              </div>
+            </div>
+          </nz-card>
 
-            <nz-select class="f" [(ngModel)]="statusFilter">
-                <nz-option nzValue="" nzLabel="All Statuses"></nz-option>
-                <nz-option *ngFor="let t of statusCategories" [nzValue]="t.id" [nzLabel]="t.label"></nz-option>
-            </nz-select>
+          <nz-card class="stat-card">
+            <div class="stat-content">
+              <div class="stat-info">
+                <p class="stat-title">RESOLVED</p>
+                <p class="stat-value green">{{ (dashboardData$ | async)?.resolved || 0 }}</p>
+              </div>
+              <div class="stat-icon green">
+                <span nz-icon nzType="check-circle" nzTheme="outline"></span>
+              </div>
+            </div>
+          </nz-card>
 
-            <nz-select class="f" [(ngModel)]="categoryFilter">
-                <nz-option nzValue="" nzLabel="All Categories"></nz-option>
-                <nz-option *ngFor="let c of categories" [nzValue]="c.id" [nzLabel]="c.label"></nz-option>
-            </nz-select>
+          <nz-card class="stat-card">
+            <div class="stat-content">
+              <div class="stat-info">
+                <p class="stat-title">JIRA LINKED</p>
+                <p class="stat-value blue">{{ (dashboardData$ | async)?.sentToJira || 0 }}</p>
+              </div>
+              <div class="stat-icon blue">
+                <span nz-icon nzType="link" nzTheme="outline"></span>
+              </div>
+            </div>
+          </nz-card>
         </div>
 
-        <nz-tabset [(nzSelectedIndex)]="tabIndex">
-            <nz-tab nzTitle="All Issues">
-                <div class="list">
-                    <app-issue-card *ngFor="let issue of filteredIssues()" [issue]="issue" [teams]="teams"
-                        [categories]="categories" (statusChanged)="onStatusChange($event.issueId, $event.status)"
-                        (teamChanged)="onTeamChange($event.issueId, $event.teamId)"
-                        (sendToJira)="onSendToJira($event)" />
-                </div>
-            </nz-tab>
+        <nz-card class="chart-card">
+          <div class="chart-content">
+            <p class="chart-title">TEAM DISTRIBUTION</p>
+            <div class="chart-container">
+              <span>Chart</span>
+            </div>
+          </div>
+        </nz-card>
+      </div>
 
-            <nz-tab nzTitle="By Team">
-                <div class="list">
-                    <div *ngFor="let group of groupedByTeam()">
-                        <div class="group-title">{{ group.teamName }}</div>
-                        <app-issue-card *ngFor="let issue of group.issues" [issue]="issue" [teams]="teams"
-                            [categories]="categories" (statusChanged)="onStatusChange($event.issueId, $event.status)"
-                            (teamChanged)="onTeamChange($event.issueId, $event.teamId)"
-                            (sendToJira)="onSendToJira($event)" />
-                    </div>
-                </div>
-            </nz-tab>
-        </nz-tabset>
-    </nz-card>
+      <!-- Issue Tabs -->
+      <app-issue-tabs
+        [issues]="(dashboardData$ | async)?.issues || []"
+        [activities]="(dashboardData$ | async)?.activities || []"
+        [stores]="(dashboardData$ | async)?.stores || []"
+        [currentUserId]="(currentUser$ | async)?.id || ''"
+        (viewDetails)="onViewDetails($event)"
+        (syncJira)="onSyncJira($event)"
+        (inspect)="onInspect($event)">
+      </app-issue-tabs>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <app-corporate-footer></app-corporate-footer>
 </div>

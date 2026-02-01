@@ -1,0 +1,190 @@
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f9fafb;
+  padding: 1rem;
+}
+
+.login-content {
+  width: 100%;
+  max-width: 28rem;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.logo-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logo-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  background-color: #f97316;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  
+  span {
+    font-size: 1.5rem;
+    color: white;
+  }
+}
+
+.app-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+
+.login-card {
+  border-top: 4px solid #f97316;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border-radius: 0.5rem;
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 0.5rem 0;
+}
+
+.card-description {
+  color: #6b7280;
+  margin: 0;
+}
+
+.login-form {
+  .form-field {
+    margin-bottom: 1rem;
+  }
+
+  .field-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+  }
+
+  .email-input {
+    height: 3rem;
+    width: 100%;
+  }
+
+  .sso-button {
+    height: 3rem;
+    background-color: #f97316;
+    border-color: #f97316;
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin-top: 1rem;
+
+    &:hover {
+      background-color: #ea580c;
+      border-color: #ea580c;
+    }
+
+    &:focus {
+      background-color: #ea580c;
+      border-color: #ea580c;
+    }
+
+    span {
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+.card-footer {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.disclaimer {
+  font-size: 0.75rem;
+  color: #6b7280;
+  line-height: 1.4;
+  margin: 0;
+  padding: 0 1.5rem;
+}
+
+.copyright {
+  margin-top: 2rem;
+  text-align: center;
+  
+  p {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive design
+@media (max-width: 640px) {
+  .login-container {
+    padding: 0.5rem;
+  }
+
+  .login-content {
+    max-width: 100%;
+  }
+
+  .app-title {
+    font-size: 1.5rem;
+  }
+
+  .card-title {
+    font-size: 1.25rem;
+  }
+
+  .logo-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    
+    span {
+      font-size: 1.25rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-wrapper {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+
+  .disclaimer {
+    padding: 0 1rem;
+  }
+}

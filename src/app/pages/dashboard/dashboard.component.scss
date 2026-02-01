@@ -1,0 +1,186 @@
+.dashboard-container {
+  min-height: 100vh;
+  background-color: #f9fafb;
+  display: flex;
+  flex-direction: column;
+  font-family: system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.main-content {
+  flex: 1;
+  padding: 2.5rem 0;
+}
+
+.content-wrapper {
+  max-width: 2000px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  
+  @media (min-width: 640px) {
+    padding: 0 1.5rem;
+  }
+  
+  @media (min-width: 1024px) {
+    padding: 0 2.5rem;
+  }
+}
+
+.stats-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  
+  @media (min-width: 1024px) {
+    grid-template-columns: 3fr 200px;
+  }
+}
+
+.stats-main {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1rem;
+  
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.stat-card {
+  background: white;
+  border: none;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  
+  ::ng-deep .ant-card-body {
+    padding: 1.5rem;
+  }
+}
+
+.stat-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.stat-info {
+  flex: 1;
+}
+
+.stat-title {
+  font-size: 10px;
+  font-weight: 800;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 0 0 0.25rem 0;
+}
+
+.stat-value {
+  font-size: 3rem;
+  font-weight: 900;
+  line-height: 1;
+  margin: 0;
+  
+  &.orange {
+    color: #f97316;
+  }
+  
+  &.yellow {
+    color: #eab308;
+  }
+  
+  &.green {
+    color: #10b981;
+  }
+  
+  &.blue {
+    color: #3b82f6;
+  }
+}
+
+.stat-icon {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &.orange {
+    background-color: #fff7ed;
+    color: #f97316;
+  }
+  
+  &.yellow {
+    background-color: #fefce8;
+    color: #eab308;
+  }
+  
+  &.green {
+    background-color: #f0fdf4;
+    color: #10b981;
+  }
+  
+  &.blue {
+    background-color: #eff6ff;
+    color: #3b82f6;
+  }
+  
+  span {
+    font-size: 1.25rem;
+  }
+}
+
+.chart-card {
+  background: white;
+  border: none;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  
+  ::ng-deep .ant-card-body {
+    padding: 1rem;
+    height: 100%;
+  }
+}
+
+.chart-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 140px;
+}
+
+.chart-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.chart-container {
+  width: 4rem;
+  height: 4rem;
+  background: linear-gradient(to right, #3b82f6, #10b981, #f97316);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  span {
+    color: white;
+    font-weight: 700;
+    font-size: 0.875rem;
+  }
+}

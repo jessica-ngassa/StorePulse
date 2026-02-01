@@ -1,0 +1,136 @@
+<div class="tabs-container">
+  <div class="tabs-header">
+    <div class="tab-buttons">
+      <button
+        *ngFor="let tab of tabs; let i = index"
+        [class]="'tab-button ' + (activeTabIndex === i ? 'active' : '')"
+        (click)="onTabChange(i)"
+      >
+        <span nz-icon [nzType]="tab.icon" nzTheme="outline"></span>
+        {{ tab.label }}
+      </button>
+    </div>
+
+    <div class="filters-section" *ngIf="activeTabIndex !== 2">
+      <nz-input-group nzPrefixIcon="search" class="search-input">
+        <input
+          nz-input
+          placeholder="Search by team or keyword..."
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onSearchChange()"
+        />
+      </nz-input-group>
+
+      <nz-select
+        [(ngModel)]="statusFilter"
+        (ngModelChange)="onFilterChange()"
+        nzPlaceHolder="Status"
+        class="filter-select"
+        style="width: 140px"
+      >
+        <nz-option nzValue="all" nzLabel="All Status"></nz-option>
+        <nz-option nzValue="new" nzLabel="New"></nz-option>
+        <nz-option nzValue="in-progress" nzLabel="In Progress"></nz-option>
+        <nz-option nzValue="resolved" nzLabel="Resolved"></nz-option>
+      </nz-select>
+
+      <nz-select
+        [(ngModel)]="storeFilter"
+        (ngModelChange)="onFilterChange()"
+        nzPlaceHolder="All Stores"
+        class="filter-select"
+        style="width: 180px"
+      >
+        <nz-option nzValue="all" nzLabel="All Stores"></nz-option>
+        <nz-option *ngFor="let store of stores" [nzValue]="store.id" [nzLabel]="store.name">
+        </nz-option>
+      </nz-select>
+    </div>
+  </div>
+
+  <!-- All Issues Tab -->
+  <div *ngIf="activeTabIndex === 0" class="issues-grid">
+    <div *ngFor="let issue of filteredIssues" class="issue-card" (click)="onViewDetails(issue)">
+      <div class="issue-header">
+        <div class="issue-content">
+          <div class="issue-badges">
+            <nz-tag [nzColor]="getStatusColor(issue.status)">{{
+              getStatusText(issue.status)
+            }}</nz-tag>
+            <span class="issue-id">#{{ issue.id.slice(-4) }}</span>
+            <nz-tag *ngIf="issue.jiraId" nzColor="blue">{{ issue.jiraId }}</nz-tag>
+          </div>
+          <h3 class="issue-title">{{ issue.title }}</h3>
+          <p class="issue-team">{{ issue.team }} • {{ issue.subTeam }}</p>
+          <div class="issue-meta">
+            <span class="issue-meta-item">
+              <span nz-icon nzType="shop" nzTheme="outline"></span>
+              {{ issue.store.name }}
+            </span>
+            <span class="issue-meta-item">
+              <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
+              {{ formatDate(issue.timestamp) }}
+            </span>
+          </div>
+        </div>
+        <div class="issue-actions">
+          <button
+            nz-button
+            nzType="default"
+            nzSize="small"
+            *ngIf="!issue.jiraId"
+            (click)="onSyncJira(issue, $event)"
+          >
+            <span nz-icon nzType="sync" nzTheme="outline"></span>
+            Sync Jira
+          </button>
+          <button nz-button nzType="primary" nzSize="small" (click)="onInspect(issue, $event)">
+            Inspect
+            <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- My Reports Tab -->
+  <div *ngIf="activeTabIndex === 1" class="issues-grid">
+    <div *ngFor="let issue of myReports" class="issue-card" (click)="onViewDetails(issue)">
+      <div class="issue-header">
+        <div class="issue-content">
+          <div class="issue-badges">
+            <nz-tag [nzColor]="getStatusColor(issue.status)">{{
+              getStatusText(issue.status)
+            }}</nz-tag>
+            <span class="issue-id">#{{ issue.id.slice(-4) }}</span>
+            <nz-tag *ngIf="issue.jiraId" nzColor="blue">{{ issue.jiraId }}</nz-tag>
+          </div>
+          <h3 class="issue-title">{{ issue.title }}</h3>
+          <p class="issue-team">{{ issue.team }} • {{ issue.subTeam }}</p>
+          <div class="issue-meta">
+            <span class="issue-meta-item">
+              <span nz-icon nzType="shop" nzTheme="outline"></span>
+              {{ issue.store.name }}
+            </span>
+            <span class="issue-meta-item">
+              <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
+              {{ formatDate(issue.timestamp) }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activity Tab -->
+  <div *ngIf="activeTabIndex === 2" class="activity-feed">
+    <div *ngFor="let activity of activities" class="activity-item">
+      <div class="activity-dot"></div>
+      <div class="activity-content">
+        <p class="activity-action">{{ activity.action }}</p>
+        <p class="activity-user">{{ activity.user }} • {{ formatDate(activity.timestamp) }}</p>
+        <p *ngIf="activity.details" class="activity-details">{{ activity.details }}</p>
+      </div>
+    </div>
+  </div>
+</div>
