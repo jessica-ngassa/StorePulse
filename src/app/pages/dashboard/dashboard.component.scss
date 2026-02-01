@@ -24,6 +24,10 @@
   @media (min-width: 1024px) {
     padding: 0 2.5rem;
   }
+  
+  @media (max-width: 600px) {
+    padding: 0 0.75rem;
+  }
 }
 
 .stats-layout {
@@ -34,6 +38,11 @@
   
   @media (min-width: 1024px) {
     grid-template-columns: 3fr 200px;
+  }
+  
+  @media (max-width: 600px) {
+    gap: 1rem;
+    margin-bottom: 1.5rem;
   }
 }
 
@@ -60,6 +69,10 @@
   
   ::ng-deep .ant-card-body {
     padding: 1.5rem;
+    
+    @media (max-width: 600px) {
+      padding: 1rem;
+    }
   }
 }
 
@@ -87,6 +100,10 @@
   font-weight: 900;
   line-height: 1;
   margin: 0;
+  
+  @media (max-width: 600px) {
+    font-size: 2rem;
+  }
   
   &.orange {
     color: #f97316;
