@@ -130,4 +130,8 @@ export class IssueTabsComponent implements OnInit {
       minute: '2-digit'
     }).format(date);
   }
+
+  getIssueForActivity(activity: ActivityLog): IssueSubmission | undefined {
+    return this.issues.find(issue => issue.id === activity.issueId);
+  }
 }

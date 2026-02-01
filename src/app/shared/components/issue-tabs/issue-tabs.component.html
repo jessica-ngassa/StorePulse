@@ -11,151 +11,190 @@
       </button>
     </div>
 
-    <div class="filters-section" *ngIf="activeTabIndex !== 2">
-      <div class="search-input">
-        <span nz-icon nzType="search" nzTheme="outline" class="search-icon"></span>
-        <input
-          nz-input
-          placeholder="Search by team or keyword..."
-          [(ngModel)]="searchTerm"
-          (ngModelChange)="onSearchChange()"
-        />
+    @if (activeTabIndex !== 2) {
+      <div class="filters-section">
+        <div class="search-input">
+          <span nz-icon nzType="search" nzTheme="outline" class="search-icon"></span>
+          <input
+            nz-input
+            placeholder="Search by team or keyword..."
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="onSearchChange()"
+          />
+        </div>
+
+        <nz-select
+          [(ngModel)]="statusFilter"
+          (ngModelChange)="onFilterChange()"
+          nzPlaceHolder="Status"
+          class="filter-select"
+          style="width: 140px"
+        >
+          <nz-option nzValue="all" nzLabel="All Status"></nz-option>
+          <nz-option nzValue="new" nzLabel="New"></nz-option>
+          <nz-option nzValue="in-progress" nzLabel="In Progress"></nz-option>
+          <nz-option nzValue="resolved" nzLabel="Resolved"></nz-option>
+        </nz-select>
+
+        <nz-select
+          [(ngModel)]="storeFilter"
+          (ngModelChange)="onFilterChange()"
+          nzPlaceHolder="All Stores"
+          class="filter-select"
+          style="width: 180px"
+        >
+          <nz-option nzValue="all" nzLabel="All Stores"></nz-option>
+          <nz-option *ngFor="let store of stores" [nzValue]="store.id" [nzLabel]="store.name">
+          </nz-option>
+        </nz-select>
       </div>
-
-      <nz-select
-        [(ngModel)]="statusFilter"
-        (ngModelChange)="onFilterChange()"
-        nzPlaceHolder="Status"
-        class="filter-select"
-        style="width: 140px"
-      >
-        <nz-option nzValue="all" nzLabel="All Status"></nz-option>
-        <nz-option nzValue="new" nzLabel="New"></nz-option>
-        <nz-option nzValue="in-progress" nzLabel="In Progress"></nz-option>
-        <nz-option nzValue="resolved" nzLabel="Resolved"></nz-option>
-      </nz-select>
-
-      <nz-select
-        [(ngModel)]="storeFilter"
-        (ngModelChange)="onFilterChange()"
-        nzPlaceHolder="All Stores"
-        class="filter-select"
-        style="width: 180px"
-      >
-        <nz-option nzValue="all" nzLabel="All Stores"></nz-option>
-        <nz-option *ngFor="let store of stores" [nzValue]="store.id" [nzLabel]="store.name">
-        </nz-option>
-      </nz-select>
-    </div>
+    }
   </div>
 
   <!-- All Issues Tab -->
-  <div *ngIf="activeTabIndex === 0" class="issues-grid">
-    <div *ngFor="let issue of filteredIssues" class="issue-card" (click)="onViewDetails(issue)">
-      <div class="issue-header">
-        <div class="issue-content">
-          <div class="issue-badges">
-            <nz-tag [nzColor]="getStatusColor(issue.status)">{{
-              getStatusText(issue.status)
-            }}</nz-tag>
-            <span class="issue-id">#{{ issue.id.slice(-6) }}</span>
-            <nz-tag *ngIf="issue.jiraId" nzColor="blue">{{ issue.jiraId }}</nz-tag>
+  @if (activeTabIndex === 0) {
+    <div class="issues-grid">
+      <div *ngFor="let issue of filteredIssues" class="issue-card" (click)="onViewDetails(issue)">
+        <div class="issue-header">
+          <div class="issue-content">
+            <div class="issue-badges">
+              <nz-tag [nzColor]="getStatusColor(issue.status)">{{
+                getStatusText(issue.status)
+              }}</nz-tag>
+              <span class="issue-id">#{{ issue.id.slice(-6) }}</span>
+              @if (issue.jiraId) {
+                <nz-tag nzColor="blue">{{ issue.jiraId }}</nz-tag>
+              }
+            </div>
+            <h3 class="issue-title">{{ issue.title }}</h3>
+            <p class="issue-team">{{ issue.team }} • {{ issue.subTeam }}</p>
+            <div class="issue-meta">
+              <span class="issue-meta-item">
+                <span nz-icon nzType="shop" nzTheme="outline"></span>
+                {{ issue.store.name }}
+              </span>
+              <span class="issue-meta-item">
+                <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
+                {{ formatDate(issue.timestamp) }}
+              </span>
+              <span class="issue-meta-item">
+                <span nz-icon nzType="user" nzTheme="outline"></span>
+                {{ issue.reportedBy }}
+              </span>
+            </div>
           </div>
-          <h3 class="issue-title">{{ issue.title }}</h3>
-          <p class="issue-team">{{ issue.team }} • {{ issue.subTeam }}</p>
-          <div class="issue-meta">
-            <span class="issue-meta-item">
-              <span nz-icon nzType="shop" nzTheme="outline"></span>
-              {{ issue.store.name }}
-            </span>
-            <span class="issue-meta-item">
-              <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
-              {{ formatDate(issue.timestamp) }}
-            </span>
-            <span class="issue-meta-item">
-              <span nz-icon nzType="user" nzTheme="outline"></span>
-              {{ issue.reportedBy }}
-            </span>
+          <div class="issue-actions">
+            <button
+              nz-button
+              nzType="default"
+              nzSize="small"
+              class="issue-sync-btn"
+              (click)="onSyncJira(issue, $event)"
+            >
+              <span nz-icon nzType="sync" nzTheme="outline"></span>
+              {{ issue.jiraId ? 'Push Update' : 'Sync Jira' }}
+            </button>
+            <button nz-button nzType="default" nzSize="small" class="issue-inspect-btn" (click)="onInspect(issue, $event)">
+              Inspect
+              <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
+            </button>
           </div>
-        </div>
-        <div class="issue-actions">
-          <button
-            nz-button
-            nzType="default"
-            nzSize="small"
-            class="issue-sync-btn"
-            (click)="onSyncJira(issue, $event)"
-          >
-            <span nz-icon nzType="sync" nzTheme="outline"></span>
-            {{ issue.jiraId ? 'Push Update' : 'Sync Jira' }}
-          </button>
-          <button nz-button nzType="default" nzSize="small" class="issue-inspect-btn" (click)="onInspect(issue, $event)">
-            Inspect
-            <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
-          </button>
         </div>
       </div>
     </div>
-  </div>
+  }
 
   <!-- My Reports Tab -->
-  <div *ngIf="activeTabIndex === 1" class="issues-grid">
-    <div *ngFor="let issue of myReports" class="issue-card" (click)="onViewDetails(issue)">
-      <div class="issue-header">
-        <div class="issue-content">
-          <div class="issue-badges">
-            <nz-tag [nzColor]="getStatusColor(issue.status)">{{
-              getStatusText(issue.status)
-            }}</nz-tag>
-            <span class="issue-id">#{{ issue.id.slice(-6) }}</span>
-            <nz-tag *ngIf="issue.jiraId" nzColor="blue">{{ issue.jiraId }}</nz-tag>
+  @if (activeTabIndex === 1) {
+    <div class="issues-grid">
+      <div *ngFor="let issue of myReports" class="issue-card" (click)="onViewDetails(issue)">
+        <div class="issue-header">
+          <div class="issue-content">
+            <div class="issue-badges">
+              <nz-tag [nzColor]="getStatusColor(issue.status)">{{
+                getStatusText(issue.status)
+              }}</nz-tag>
+              <span class="issue-id">#{{ issue.id.slice(-6) }}</span>
+              @if (issue.jiraId) {
+                <nz-tag nzColor="blue">{{ issue.jiraId }}</nz-tag>
+              }
+            </div>
+            <h3 class="issue-title">{{ issue.title }}</h3>
+            <p class="issue-team">{{ issue.team }} • {{ issue.subTeam }}</p>
+            <div class="issue-meta">
+              <span class="issue-meta-item">
+                <span nz-icon nzType="shop" nzTheme="outline"></span>
+                {{ issue.store.name }}
+              </span>
+              <span class="issue-meta-item">
+                <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
+                {{ formatDate(issue.timestamp) }}
+              </span>
+              <span class="issue-meta-item">
+                <span nz-icon nzType="user" nzTheme="outline"></span>
+                {{ issue.reportedBy }}
+              </span>
+            </div>
           </div>
-          <h3 class="issue-title">{{ issue.title }}</h3>
-          <p class="issue-team">{{ issue.team }} • {{ issue.subTeam }}</p>
-          <div class="issue-meta">
-            <span class="issue-meta-item">
-              <span nz-icon nzType="shop" nzTheme="outline"></span>
-              {{ issue.store.name }}
-            </span>
-            <span class="issue-meta-item">
-              <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
-              {{ formatDate(issue.timestamp) }}
-            </span>
-            <span class="issue-meta-item">
-              <span nz-icon nzType="user" nzTheme="outline"></span>
-              {{ issue.reportedBy }}
-            </span>
+          <div class="issue-actions">
+            <button
+              nz-button
+              nzType="default"
+              nzSize="small"
+              class="issue-sync-btn"
+              (click)="onSyncJira(issue, $event)"
+            >
+              <span nz-icon nzType="sync" nzTheme="outline"></span>
+              {{ issue.jiraId ? 'Push Update' : 'Sync Jira' }}
+            </button>
+            <button nz-button nzType="default" nzSize="small" class="issue-inspect-btn" (click)="onInspect(issue, $event)">
+              Inspect
+              <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
+            </button>
           </div>
-        </div>
-        <div class="issue-actions">
-          <button
-            nz-button
-            nzType="default"
-            nzSize="small"
-            class="issue-sync-btn"
-            (click)="onSyncJira(issue, $event)"
-          >
-            <span nz-icon nzType="sync" nzTheme="outline"></span>
-            {{ issue.jiraId ? 'Push Update' : 'Sync Jira' }}
-          </button>
-          <button nz-button nzType="default" nzSize="small" class="issue-inspect-btn" (click)="onInspect(issue, $event)">
-            Inspect
-            <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
-          </button>
         </div>
       </div>
     </div>
-  </div>
+  }
 
   <!-- Recent Activity Tab -->
-  <div *ngIf="activeTabIndex === 2" class="activity-feed">
-    <div *ngFor="let activity of activities" class="activity-item">
-      <div class="activity-dot"></div>
-      <div class="activity-content">
-        <p class="activity-action">{{ activity.action }}</p>
-        <p class="activity-user">{{ activity.user }} • {{ formatDate(activity.timestamp) }}</p>
-        <p *ngIf="activity.details" class="activity-details">{{ activity.details }}</p>
+  @if (activeTabIndex === 2) {
+    <div class="activity-feed">
+      <div *ngFor="let activity of activities; let last = last" class="activity-item" [class.last]="last">
+        @if (!last) {
+          <div class="timeline-line"></div>
+        }
+        <div class="timeline-dot"></div>
+        <div class="activity-card">
+          <div class="activity-header">
+            <div class="user-info">
+              <div class="user-avatar">
+                <span>{{ activity.user.charAt(0) }}</span>
+              </div>
+              <div class="user-details">
+                <span class="user-name">{{ activity.user }}</span>
+                <span class="activity-action">{{ activity.action }}</span>
+              </div>
+            </div>
+            <span class="activity-time">{{ formatDate(activity.timestamp) }}</span>
+          </div>
+          
+          @if (getIssueForActivity(activity); as issue) {
+            <div class="issue-reference">
+              <span nz-icon nzType="message" nzTheme="outline"></span>
+              <span class="issue-title">{{ issue.title }}</span>
+              <span class="issue-badge">#{{ issue.id.slice(-6) }}</span>
+            </div>
+          }
+          
+          @if (activity.details) {
+            <div class="activity-details">
+              <div class="details-dot"></div>
+              <span>{{ activity.details }}</span>
+            </div>
+          }
+        </div>
       </div>
     </div>
-  </div>
+  }
 </div>
