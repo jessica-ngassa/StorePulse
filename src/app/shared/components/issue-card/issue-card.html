@@ -3,10 +3,12 @@
     <div class="status-row">
       <app-status-badge [status]="issue.status"></app-status-badge>
       <span class="issue-number">#{{ issue.id.slice(-6) }}</span>
-      <div class="jira-badge" *ngIf="issue.jira.key">
-        <nz-icon nzType="link" nzTheme="outline"></nz-icon>
-        {{ issue.jira.key }}
-      </div>
+      @if (issue.jira.key) {
+        <div class="jira-badge">
+          <nz-icon nzType="link" nzTheme="outline"></nz-icon>
+          {{ issue.jira.key }}
+        </div>
+      }
     </div>
     <div class="action-buttons" (click)="$event.stopPropagation()">
       <button nz-button nzType="default" nzSize="small" class="sync-btn" (click)="sendToJira.emit(issue.id)">
@@ -24,8 +26,11 @@
 
   <div class="team-badges">
     <span class="team-primary">{{ teamName }}</span>
-    <span class="team-secondary" *ngIf="subTeamName">{{ subTeamName }}</span>
-    <span class="team-secondary" *ngIf="!subTeamName">{{ categoryLabel }}</span>
+    @if (subTeamName) {
+      <span class="team-secondary">{{ subTeamName }}</span>
+    } @else {
+      <span class="team-secondary">{{ categoryLabel }}</span>
+    }
   </div>
 
   <div class="meta-divider"></div>

@@ -45,7 +45,9 @@
           [disabled]="isLoading"
           class="sso-button"
         >
-          <span nz-icon nzType="safety-certificate" *ngIf="!isLoading"></span>
+          @if (!isLoading) {
+            <span nz-icon nzType="safety-certificate"></span>
+          }
           Continue with SSO
         </button>
       </form>
