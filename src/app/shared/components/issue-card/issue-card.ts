@@ -53,7 +53,7 @@ export class IssueCard {
   }
 
   get jiraButtonLabel(): string {
-    if (this.issue.jira.status === 'SENT') return 'Push Update';
+    if (this.issue.jira.key || this.issue.jira.status === 'SENT') return 'Push Update';
     if (this.issue.jira.status === 'FAILED') return 'Retry Jira';
     return 'Sync Jira';
   }

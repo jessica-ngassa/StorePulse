@@ -2,7 +2,7 @@
   <div class="card-header">
     <div class="status-row">
       <app-status-badge [status]="issue.status"></app-status-badge>
-      <span class="issue-number">#{{ issue.id.slice(-1) }}</span>
+      <span class="issue-number">#{{ issue.id.slice(-6) }}</span>
       <div class="jira-badge" *ngIf="issue.jira.key">
         <nz-icon nzType="link" nzTheme="outline"></nz-icon>
         {{ issue.jira.key }}
@@ -25,7 +25,10 @@
   <div class="team-badges">
     <span class="team-primary">{{ teamName }}</span>
     <span class="team-secondary" *ngIf="subTeamName">{{ subTeamName }}</span>
+    <span class="team-secondary" *ngIf="!subTeamName">{{ categoryLabel }}</span>
   </div>
+
+  <div class="meta-divider"></div>
 
   <div class="issue-footer">
     <div class="footer-item">

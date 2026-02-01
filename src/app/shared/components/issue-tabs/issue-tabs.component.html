@@ -12,14 +12,15 @@
     </div>
 
     <div class="filters-section" *ngIf="activeTabIndex !== 2">
-      <nz-input-group nzPrefixIcon="search" class="search-input">
+      <div class="search-input">
+        <span nz-icon nzType="search" nzTheme="outline" class="search-icon"></span>
         <input
           nz-input
           placeholder="Search by team or keyword..."
           [(ngModel)]="searchTerm"
           (ngModelChange)="onSearchChange()"
         />
-      </nz-input-group>
+      </div>
 
       <nz-select
         [(ngModel)]="statusFilter"
@@ -57,7 +58,7 @@
             <nz-tag [nzColor]="getStatusColor(issue.status)">{{
               getStatusText(issue.status)
             }}</nz-tag>
-            <span class="issue-id">#{{ issue.id.slice(-4) }}</span>
+            <span class="issue-id">#{{ issue.id.slice(-6) }}</span>
             <nz-tag *ngIf="issue.jiraId" nzColor="blue">{{ issue.jiraId }}</nz-tag>
           </div>
           <h3 class="issue-title">{{ issue.title }}</h3>
@@ -71,6 +72,10 @@
               <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
               {{ formatDate(issue.timestamp) }}
             </span>
+            <span class="issue-meta-item">
+              <span nz-icon nzType="user" nzTheme="outline"></span>
+              {{ issue.reportedBy }}
+            </span>
           </div>
         </div>
         <div class="issue-actions">
@@ -78,13 +83,13 @@
             nz-button
             nzType="default"
             nzSize="small"
-            *ngIf="!issue.jiraId"
+            class="issue-sync-btn"
             (click)="onSyncJira(issue, $event)"
           >
             <span nz-icon nzType="sync" nzTheme="outline"></span>
-            Sync Jira
+            {{ issue.jiraId ? 'Push Update' : 'Sync Jira' }}
           </button>
-          <button nz-button nzType="primary" nzSize="small" (click)="onInspect(issue, $event)">
+          <button nz-button nzType="default" nzSize="small" class="issue-inspect-btn" (click)="onInspect(issue, $event)">
             Inspect
             <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
           </button>
@@ -102,7 +107,7 @@
             <nz-tag [nzColor]="getStatusColor(issue.status)">{{
               getStatusText(issue.status)
             }}</nz-tag>
-            <span class="issue-id">#{{ issue.id.slice(-4) }}</span>
+            <span class="issue-id">#{{ issue.id.slice(-6) }}</span>
             <nz-tag *ngIf="issue.jiraId" nzColor="blue">{{ issue.jiraId }}</nz-tag>
           </div>
           <h3 class="issue-title">{{ issue.title }}</h3>
@@ -116,7 +121,27 @@
               <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
               {{ formatDate(issue.timestamp) }}
             </span>
+            <span class="issue-meta-item">
+              <span nz-icon nzType="user" nzTheme="outline"></span>
+              {{ issue.reportedBy }}
+            </span>
           </div>
+        </div>
+        <div class="issue-actions">
+          <button
+            nz-button
+            nzType="default"
+            nzSize="small"
+            class="issue-sync-btn"
+            (click)="onSyncJira(issue, $event)"
+          >
+            <span nz-icon nzType="sync" nzTheme="outline"></span>
+            {{ issue.jiraId ? 'Push Update' : 'Sync Jira' }}
+          </button>
+          <button nz-button nzType="default" nzSize="small" class="issue-inspect-btn" (click)="onInspect(issue, $event)">
+            Inspect
+            <span nz-icon nzType="arrow-right" nzTheme="outline"></span>
+          </button>
         </div>
       </div>
     </div>

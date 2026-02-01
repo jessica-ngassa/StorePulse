@@ -1,3 +1,133 @@
- :host {
-   display: block;
- }
+:host {
+  display: block;
+}
+
+.corporate-footer {
+  background: #0f172a;
+  color: #ffffff;
+  padding: 3rem 0;
+}
+
+.corporate-footer__container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.corporate-footer__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  align-items: start;
+  opacity: 0.8;
+}
+
+.corporate-footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.corporate-footer__logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.corporate-footer__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: #f97316;
+  color: #ffffff;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.corporate-footer__title {
+  font-size: 1.125rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.corporate-footer__desc {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  line-height: 1.5;
+  font-weight: 600;
+  margin: 0;
+  max-width: 28rem;
+}
+
+.corporate-footer__links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #6b7280;
+}
+
+.corporate-footer__links-title {
+  color: #d1d5db;
+  margin: 0;
+}
+
+.corporate-footer__link {
+  color: #6b7280;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.corporate-footer__link:hover {
+  color: #f97316;
+}
+
+.corporate-footer__status {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.corporate-footer__status-title {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #f97316;
+  margin: 0;
+  letter-spacing: 0.08em;
+}
+
+.corporate-footer__status-copy {
+  font-size: 0.75rem;
+  color: #6b7280;
+  font-weight: 600;
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .corporate-footer__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .corporate-footer__status {
+    text-align: right;
+    align-items: flex-end;
+  }
+}
+
+@media (min-width: 640px) {
+  .corporate-footer__container {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .corporate-footer__container {
+    padding: 0 2rem;
+  }
+}
