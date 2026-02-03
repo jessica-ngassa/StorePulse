@@ -1,82 +1,167 @@
- <div class="page">
-      <nz-card class="card">
-        <div class="title">Report an Issue</div>
-        <div class="subtitle">Describe the problem you're experiencing with the store app</div>
-
-        <form nz-form [formGroup]="form" (ngSubmit)="submit()">
-
-             <nz-form-item>
-            <nz-form-label [nzRequired]="true">Store Number</nz-form-label>
-            <nz-form-control nzErrorTip="Store Number is required">
-              <input nz-input formControlName="storeNumber" placeholder="1111" />
-            </nz-form-control>
-          </nz-form-item>
-
-          <nz-form-item>
-            <nz-form-label [nzRequired]="true">Your Name</nz-form-label>
-            <nz-form-control nzErrorTip="Name is required">
-              <input nz-input formControlName="reporterName" placeholder="John Doe" />
-            </nz-form-control>
-          </nz-form-item>
-
-          <nz-form-item>
-            <nz-form-label [nzRequired]="true">Issue Title</nz-form-label>
-            <nz-form-control nzErrorTip="Title is required">
-              <input nz-input formControlName="title" placeholder="Brief description of the issue" />
-            </nz-form-control>
-          </nz-form-item>
-
-          <nz-form-item>
-            <nz-form-label [nzRequired]="true">Issue Category</nz-form-label>
-            <nz-form-control nzErrorTip="Category is required">
-              <nz-select formControlName="categoryId" nzPlaceHolder="Select a category">
-                <nz-option *ngFor="let c of categories" [nzValue]="c.id" [nzLabel]="c.label"></nz-option>
-              </nz-select>
-            </nz-form-control>
-          </nz-form-item>
-
-          <nz-form-item>
-            <nz-form-label [nzRequired]="true">Detailed Description</nz-form-label>
-            <nz-form-control nzErrorTip="Description is required">
-              <textarea
-                nz-input
-                formControlName="description"
-                rows="4"
-                placeholder="Include steps to reproduce, error messages, and any relevant information."
-              ></textarea>
-            </nz-form-control>
-          </nz-form-item>
-
-          <div class="upload-block">
-            <div class="upload-label">Photos (Optional)</div>
-            <nz-upload
-              [nzBeforeUpload]="beforeUploadImage"
-              [nzMultiple]="true"
-              [nzShowUploadList]="true"
-            >
-              <button nz-button type="button">Upload Photos</button>
-            </nz-upload>
-          </div>
-
-          <div class="upload-block">
-            <div class="upload-label">Videos (Optional)</div>
-            <nz-upload
-              [nzBeforeUpload]="beforeUploadVideo"
-              [nzMultiple]="true"
-              [nzShowUploadList]="true"
-            >
-              <button nz-button type="button">Upload Videos</button>
-            </nz-upload>
-          </div>
-
-          <button
-            nz-button
-            nzType="primary"
-            class="submit"
-            [disabled]="form.invalid"
-          >
-            Submit Issue Report
-          </button>
-        </form>
-      </nz-card>
+<nz-modal
+  [(nzVisible)]="isDialogOpen"
+  [nzFooter]="null"
+  [nzMaskClosable]="false"
+  [nzWidth]="880"
+  nzWrapClassName="report-modal"
+  [nzCentered]="true"
+  (nzOnCancel)="closeDialog()"
+>
+  <ng-container *nzModalContent>
+    <div class="report-modal__header">
+      <div class="report-modal__title">Report Technical Issue</div>
+      <div class="report-modal__subtitle">
+        Help us route this correctly by providing detailed store info.
+      </div>
     </div>
+
+    <form class="report-form" [formGroup]="form" (ngSubmit)="submit()">
+      <section class="report-section">
+        <div class="report-section__title report-section__title--orange">
+          <span class="report-section__bar report-section__bar--orange"></span>
+          1. Store Context
+        </div>
+
+        <div class="report-grid">
+          <div class="report-field">
+            <label class="report-label">Store Location *</label>
+            <nz-select formControlName="storeNumber" nzPlaceHolder="Select store" class="report-select">
+              <nz-option *ngFor="let store of storeOptions()" [nzValue]="store.id" [nzLabel]="store.name"></nz-option>
+            </nz-select>
+          </div>
+
+          <div class="report-field">
+            <label class="report-label">Department</label>
+            <input nz-input formControlName="department" placeholder="e.g. Lumber, Garden" />
+          </div>
+        </div>
+
+        <div class="report-grid">
+          <div class="report-field">
+            <label class="report-label">Associate Name (Ref)</label>
+            <input nz-input formControlName="referenceAssociate" placeholder="Who experienced this?" />
+          </div>
+
+          <div class="report-field">
+            <label class="report-label">Quarter Location Visit *</label>
+            <nz-select formControlName="quarter" nzPlaceHolder="Select Quarter" class="report-select">
+              <nz-option *ngFor="let option of quarterOptions()" [nzValue]="option" [nzLabel]="option"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+
+        <div class="report-grid">
+          <div class="report-field">
+            <label class="report-label">Device Type / Model</label>
+            <input nz-input formControlName="deviceModel" placeholder="e.g. Zebra TC52" />
+          </div>
+        </div>
+      </section>
+
+      <section class="report-section">
+        <div class="report-section__title report-section__title--blue">
+          <span class="report-section__bar report-section__bar--blue"></span>
+          2. Routing &amp; Severity
+        </div>
+
+        <div class="report-grid">
+          <div class="report-field">
+            <label class="report-label">Responsible Team *</label>
+            <nz-select formControlName="categoryId" nzPlaceHolder="Select Team" class="report-select">
+              <nz-option *ngFor="let category of categories()" [nzValue]="category.id" [nzLabel]="category.label"></nz-option>
+            </nz-select>
+          </div>
+
+          <div class="report-field">
+            <label class="report-label">Specific Sub-Team</label>
+            <nz-select formControlName="subTeam" nzPlaceHolder="Pick team first" class="report-select">
+              <nz-option *ngFor="let option of subTeamOptions()" [nzValue]="option" [nzLabel]="option"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+
+        <div class="report-grid">
+          <div class="report-field">
+            <label class="report-label">Issue Priority *</label>
+            <nz-select formControlName="priority" nzPlaceHolder="Select Priority" class="report-select">
+              <nz-option *ngFor="let option of priorityOptions()" [nzValue]="option" [nzLabel]="option | titlecase"></nz-option>
+            </nz-select>
+          </div>
+
+          <div class="report-field">
+            <label class="report-label">Reproducibility</label>
+            <nz-select formControlName="reproducibility" nzPlaceHolder="How often?" class="report-select">
+              <nz-option *ngFor="let option of reproducibilityOptions()" [nzValue]="option" [nzLabel]="option | titlecase"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+      </section>
+
+      <section class="report-section">
+        <div class="report-section__title report-section__title--green">
+          <span class="report-section__bar report-section__bar--green"></span>
+          3. Issue Details
+        </div>
+
+        <div class="report-field">
+          <label class="report-label">Short Summary *</label>
+          <input nz-input formControlName="title" placeholder="Summary" />
+        </div>
+
+        <div class="report-field">
+          <label class="report-label">Description &amp; Steps *</label>
+          <textarea
+            nz-input
+            formControlName="description"
+            rows="4"
+            placeholder="Reproduction steps..."
+          ></textarea>
+        </div>
+
+        <div class="report-attachments">
+          <nz-upload
+            [nzBeforeUpload]="beforeUploadImage"
+            [nzShowUploadList]="false"
+            nzListType="picture"
+          >
+            <button nz-button nzType="default" class="report-attachment-btn" type="button">
+              <span nz-icon nzType="camera" nzTheme="outline"></span>
+              Photos
+            </button>
+          </nz-upload>
+          <nz-upload
+            [nzBeforeUpload]="beforeUploadVideo"
+            [nzShowUploadList]="false"
+            nzListType="picture"
+          >
+            <button nz-button nzType="default" class="report-attachment-btn" type="button">
+              <span nz-icon nzType="video-camera" nzTheme="outline"></span>
+              Videos
+            </button>
+          </nz-upload>
+        </div>
+      </section>
+
+      <div class="report-routing">
+        <span nz-icon nzType="alert" nzTheme="outline" class="report-routing__icon"></span>
+        <div>
+          <div class="report-routing__title">Auto-Routing</div>
+          <div class="report-routing__copy">
+            Assigning to
+            <span class="report-routing__team">{{ selectedCategoryLabel() }}</span>.
+          </div>
+        </div>
+      </div>
+
+      <button
+        nz-button
+        nzType="primary"
+        class="report-submit"
+        [disabled]="form.invalid"
+        type="submit"
+      >
+        Submit Issue
+      </button>
+    </form>
+  </ng-container>
+</nz-modal>
