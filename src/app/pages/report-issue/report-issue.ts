@@ -119,6 +119,14 @@ export class ReportIssue implements OnInit {
       .subscribe((user) => {
         this.currentUserName = user!.name;
         this.currentUserId = user!.id;
+
+        // Apply user settings as defaults for new reports.
+        if (!this.form.value.categoryId && user?.preferredCategory) {
+          this.form.patchValue({ categoryId: user.preferredCategory }, { emitEvent: true });
+        }
+        if (!this.form.value.subTeam && user?.preferredSubTeam) {
+          this.form.patchValue({ subTeam: user.preferredSubTeam }, { emitEvent: false });
+        }
       });
 
     const categoryControl = this.form.get('categoryId');

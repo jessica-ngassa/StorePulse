@@ -32,7 +32,10 @@
           <div class="user-avatar">
             {{ getInitials() }}
           </div>
-          <button class="logout-btn" (click)="onLogout()">
+          <button class="settings-btn" (click)="openSettings()" [disabled]="!user" type="button" aria-label="Open user settings">
+            <span nz-icon nzType="setting" nzTheme="outline"></span>
+          </button>
+          <button class="logout-btn" (click)="onLogout()" type="button" aria-label="Logout">
             <span nz-icon nzType="logout" nzTheme="outline"></span>
           </button>
         </div>
@@ -64,3 +67,55 @@
     </div>
   </div>
 </div>
+
+<nz-modal
+  [(nzVisible)]="isSettingsOpen"
+  [nzFooter]="null"
+  [nzMaskClosable]="true"
+  [nzCentered]="true"
+  [nzWidth]="560"
+  nzWrapClassName="user-settings-modal"
+  (nzOnCancel)="closeSettings()"
+>
+  <ng-container *nzModalContent>
+    <div class="settings-modal">
+      <div class="settings-modal__header">
+        <div class="settings-modal__title-row">
+          <span nz-icon nzType="setting" nzTheme="outline"></span>
+          <h2>User Settings</h2>
+        </div>
+        <p>Customize your reporting defaults for faster submission.</p>
+      </div>
+
+      <form class="settings-modal__body" [formGroup]="settingsForm" (ngSubmit)="saveSettings()">
+        <label class="settings-field">
+          <span>Display Name</span>
+          <input nz-input formControlName="name" placeholder="Your name" />
+        </label>
+
+        <label class="settings-field">
+          <span>Preferred Team</span>
+          <nz-select formControlName="preferredCategory" nzPlaceHolder="Select team">
+            <nz-option
+              *ngFor="let category of categories"
+              [nzValue]="category.id"
+              [nzLabel]="category.label"
+            ></nz-option>
+          </nz-select>
+        </label>
+
+        <label class="settings-field">
+          <span>Preferred Sub-Team</span>
+          <input nz-input formControlName="preferredSubTeam" placeholder="Optional" />
+        </label>
+
+        <div class="settings-actions">
+          <button nz-button nzType="default" type="button" (click)="closeSettings()">Cancel</button>
+          <button nz-button nzType="primary" [disabled]="settingsForm.invalid || isSavingSettings" type="submit">
+            {{ isSavingSettings ? 'Saving...' : 'Save Settings' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </ng-container>
+</nz-modal>

@@ -91,14 +91,6 @@ export class DashboardComponent implements OnInit {
         this.message.remove();
         this.message.success(`Successfully synced to Jira: ${jiraId}`);
         this.refreshSelectedIssue(issue.id);
-
-        // Add activity log
-        this.dashboardService.addActivity({
-          issueId: issue.id,
-          action: 'Sent to Jira',
-          user: 'System',
-          details: `Jira Ticket: ${jiraId}`
-        }).subscribe();
       },
       error: () => {
         this.message.remove();

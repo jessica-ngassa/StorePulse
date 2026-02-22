@@ -177,6 +177,26 @@
   background-color: #fef2f2;
 }
 
+.settings-btn {
+  padding: 0.5rem;
+  color: #9ca3af;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.settings-btn:hover:not(:disabled) {
+  color: #ea580c;
+  background-color: #fff7ed;
+}
+
+.settings-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .explorer-section {
   background-color: white;
   border-bottom: 1px solid #e5e7eb;
@@ -304,4 +324,96 @@
 
 .report-btn:active {
   transform: scale(0.98);
+}
+
+:host ::ng-deep .user-settings-modal .ant-modal-content {
+  border-radius: 20px;
+  overflow: hidden;
+  padding: 0;
+}
+
+:host ::ng-deep .user-settings-modal .ant-modal-body {
+  padding: 0;
+}
+
+:host ::ng-deep .user-settings-modal .ant-modal-close {
+  color: #e2e8f0;
+  top: 16px;
+}
+
+.settings-modal__header {
+  background: #0f172a;
+  color: #ffffff;
+  padding: 1.3rem 1.5rem;
+}
+
+.settings-modal__title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.settings-modal__title-row span[nz-icon] {
+  color: #f97316;
+  font-size: 1.05rem;
+}
+
+.settings-modal__title-row h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.settings-modal__header p {
+  margin: 0.45rem 0 0;
+  color: #94a3b8;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.settings-modal__body {
+  padding: 1.2rem 1.5rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+}
+
+.settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.38rem;
+}
+
+.settings-field span {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #475569;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.settings-field input[nz-input],
+.settings-field nz-select ::ng-deep .ant-select-selector {
+  border-radius: 12px !important;
+  border: 2px solid #e2e8f0 !important;
+  background: #f8fafc;
+  min-height: 42px;
+}
+
+.settings-field nz-select ::ng-deep .ant-select-selector {
+  display: flex;
+  align-items: center;
+}
+
+.settings-actions {
+  margin-top: 0.4rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+.settings-actions button[nz-button] {
+  border-radius: 10px;
+  font-weight: 700;
 }

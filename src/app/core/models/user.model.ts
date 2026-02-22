@@ -3,6 +3,8 @@ export interface User {
   name: string;
   email: string;
   role: string;
+  preferredCategory?: string;
+  preferredSubTeam?: string;
 }
 
 export interface LoginRequest {

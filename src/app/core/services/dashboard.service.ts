@@ -135,6 +135,16 @@ export class DashboardService {
     const currentSubmissions = this.submissionsSubject.value;
     this.submissionsSubject.next([newSubmission, ...currentSubmissions]);
 
+    // Keep activity creation in service so backend wiring stays centralized.
+    if (status !== 'draft') {
+      this.addActivity({
+        issueId: newSubmission.id,
+        action: 'Reported Issue',
+        user: newSubmission.reportedBy,
+        details: `Priority: ${newSubmission.priority.toUpperCase()}`
+      }).subscribe();
+    }
+
     return of(newSubmission).pipe(delay(500));
   }
 
@@ -148,12 +158,28 @@ export class DashboardService {
 
   updateSubmission(id: string, updates: Partial<IssueSubmission>): Observable<IssueSubmission> {
     const currentSubmissions = this.submissionsSubject.value;
+    const previousSubmission = currentSubmissions.find(sub => sub.id === id);
     const updatedSubmissions = currentSubmissions.map(sub => 
       sub.id === id ? { ...sub, ...updates } : sub
     );
     this.submissionsSubject.next(updatedSubmissions);
 
     const updatedSubmission = updatedSubmissions.find(sub => sub.id === id)!;
+
+    // If a draft is submitted, log it as a submission activity.
+    if (
+      previousSubmission &&
+      previousSubmission.status === 'draft' &&
+      updatedSubmission.status !== 'draft'
+    ) {
+      this.addActivity({
+        issueId: updatedSubmission.id,
+        action: 'Submitted Issue',
+        user: updatedSubmission.reportedBy,
+        details: 'Draft converted to full report'
+      }).subscribe();
+    }
+
     return of(updatedSubmission).pipe(delay(300));
   }
 
@@ -171,13 +197,24 @@ export class DashboardService {
   }
 
   syncToJira(issueId: string): Observable<string> {
+    const existingIssue = this.getSubmissionById(issueId);
+    const isUpdate = !!existingIssue?.jiraId;
     const jiraId = `HD-${Math.floor(Math.random() * 9000) + 1000}`;
     
     this.updateSubmission(issueId, {
       jiraId,
       jiraSyncCount: 1,
       lastJiraSync: new Date()
-    }).subscribe();
+    }).subscribe({
+      next: (updatedIssue) => {
+        this.addActivity({
+          issueId: updatedIssue.id,
+          action: isUpdate ? 'Re-synced to Jira' : 'Sent to Jira',
+          user: updatedIssue.reportedBy,
+          details: `Jira Ticket: ${jiraId}`
+        }).subscribe();
+      }
+    });
 
     return of(jiraId).pipe(delay(1500));
   }

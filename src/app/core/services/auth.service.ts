@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, delay, of } from 'rxjs';
+import { BehaviorSubject, Observable, delay, of, throwError } from 'rxjs';
 import { User, LoginRequest } from '../models/user.model';
 
 @Injectable({
@@ -14,7 +14,9 @@ export class AuthService {
       id: 'user-123',
       name: 'John Associate',
       email: request.email || 'j.associate@homedepot.com',
-      role: 'associate'
+      role: 'associate',
+      preferredCategory: 'scanning',
+      preferredSubTeam: 'Scanner Maintenance'
     };
 
     return of(user).pipe(delay(1500));
@@ -22,6 +24,20 @@ export class AuthService {
 
   setCurrentUser(user: User): void {
     this.currentUserSubject.next(user);
+  }
+
+  updateCurrentUser(updates: Partial<User>): Observable<User> {
+    const currentUser = this.currentUserSubject.value;
+    if (!currentUser) {
+      return throwError(() => new Error('No authenticated user found'));
+    }
+
+    const updatedUser: User = {
+      ...currentUser,
+      ...updates
+    };
+    this.currentUserSubject.next(updatedUser);
+    return of(updatedUser).pipe(delay(350));
   }
 
   logout(): void {
