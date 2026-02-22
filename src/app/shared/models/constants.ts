@@ -19,6 +19,7 @@ export const CATEGORIES: IssueCategory[] = [
 
 
 export const STATUSCATEGORY: StatusCategory[] = [
+  { id: 'DRAFT', label: 'Draft' },
   { id: 'NEW', label: 'New' },
   { id: 'IN_PROGRESS', label: 'In Progress' },
   { id: 'RESOLVED', label: 'Resolved' },

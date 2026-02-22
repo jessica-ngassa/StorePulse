@@ -13,6 +13,11 @@
     background: #dbeafe;
     color: #1d4ed8;
   }
+
+  &.status-draft {
+    background: #e2e8f0;
+    color: #334155;
+  }
   
   &.status-in-progress {
     background: #fef3c7;

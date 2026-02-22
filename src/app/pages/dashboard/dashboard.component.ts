@@ -39,6 +39,8 @@ export class DashboardComponent implements OnInit {
   private message = inject(NzMessageService);
 
   currentUser$ = this.authService.currentUser$;
+  selectedIssue: IssueSubmission | null = null;
+  isInspectModalOpen = false;
 
   dashboardData$ = combineLatest([
     this.dashboardService.getSubmissions(),
@@ -74,8 +76,11 @@ export class DashboardComponent implements OnInit {
   }
 
   onViewDetails(issue: IssueSubmission): void {
-    this.message.info(`Viewing details for: ${issue.title}`);
-    // Implement view details logic
+    if (issue.status === 'draft') {
+      this.router.navigate(['/report'], { queryParams: { resumeId: issue.id } });
+      return;
+    }
+    this.openInspectModal(issue);
   }
 
   onSyncJira(issue: IssueSubmission): void {
@@ -85,6 +90,7 @@ export class DashboardComponent implements OnInit {
       next: (jiraId) => {
         this.message.remove();
         this.message.success(`Successfully synced to Jira: ${jiraId}`);
+        this.refreshSelectedIssue(issue.id);
 
         // Add activity log
         this.dashboardService.addActivity({
@@ -102,6 +108,95 @@ export class DashboardComponent implements OnInit {
   }
 
   onInspect(issue: IssueSubmission): void {
-    this.message.info(`Inspecting issue: ${issue.title}`);
+    if (issue.status === 'draft') {
+      this.onViewDetails(issue);
+      return;
+    }
+    this.openInspectModal(issue);
+  }
+
+  closeInspectModal(): void {
+    this.isInspectModalOpen = false;
+    this.selectedIssue = null;
+  }
+
+  onEditRecord(issue: IssueSubmission): void {
+    this.closeInspectModal();
+    this.router.navigate(['/report'], { queryParams: { resumeId: issue.id } });
+  }
+
+  getStatusText(status: IssueSubmission['status']): string {
+    switch (status) {
+      case 'new':
+        return 'NEW';
+      case 'in-progress':
+        return 'IN PROGRESS';
+      case 'resolved':
+        return 'RESOLVED';
+      case 'draft':
+        return 'DRAFT';
+      default:
+        return String(status).toUpperCase();
+    }
+  }
+
+  getStatusClass(status: IssueSubmission['status']): string {
+    switch (status) {
+      case 'new':
+        return 'inspect-chip--status-new';
+      case 'in-progress':
+        return 'inspect-chip--status-progress';
+      case 'resolved':
+        return 'inspect-chip--status-resolved';
+      case 'draft':
+        return 'inspect-chip--status-draft';
+      default:
+        return 'inspect-chip--status-draft';
+    }
+  }
+
+  getCaseCode(issueId: string): string {
+    return issueId.slice(-6).toUpperCase();
+  }
+
+  getQuarterLabel(issue: IssueSubmission): string {
+    return issue.quarter || 'Q1 Cycle';
+  }
+
+  getTargetTeam(issue: IssueSubmission): string {
+    return issue.subTeam?.trim() || 'Pending Triage';
+  }
+
+  getReporterIdLabel(reporterId: string): string {
+    return reporterId.slice(-6).toUpperCase();
+  }
+
+  formatDetailedDate(date?: Date): string {
+    if (!date) {
+      return '';
+    }
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit'
+    }).format(new Date(date));
+  }
+
+  private openInspectModal(issue: IssueSubmission): void {
+    const latestIssue = this.dashboardService.getSubmissionById(issue.id) || issue;
+    this.selectedIssue = { ...latestIssue };
+    this.isInspectModalOpen = true;
+  }
+
+  private refreshSelectedIssue(issueId: string): void {
+    if (!this.selectedIssue || this.selectedIssue.id !== issueId) {
+      return;
+    }
+
+    const updatedIssue = this.dashboardService.getSubmissionById(issueId);
+    if (updatedIssue) {
+      this.selectedIssue = { ...updatedIssue };
+    }
   }
 }

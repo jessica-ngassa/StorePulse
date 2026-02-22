@@ -13,9 +13,11 @@ export class StatusBadge {
 
   get label(): string {
     switch (this.status) {
+      case 'DRAFT': return 'Draft';
       case 'NEW': return 'New';
       case 'IN_PROGRESS': return 'Progress';
       case 'RESOLVED': return 'Fixed';
+      default: return 'Unknown';
     }
   }
 }

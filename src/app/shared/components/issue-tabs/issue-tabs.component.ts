@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
@@ -27,7 +27,7 @@ import { IssueSubmission, ActivityLog, Store } from '../../../core/models/dashbo
   templateUrl: './issue-tabs.component.html',
   styleUrl: './issue-tabs.component.scss'
 })
-export class IssueTabsComponent implements OnInit {
+export class IssueTabsComponent implements OnInit, OnChanges {
   @Input() issues: IssueSubmission[] = [];
   @Input() activities: ActivityLog[] = [];
   @Input() stores: Store[] = [];
@@ -44,15 +44,23 @@ export class IssueTabsComponent implements OnInit {
 
   filteredIssues: IssueSubmission[] = [];
   myReports: IssueSubmission[] = [];
+  myDrafts: IssueSubmission[] = [];
 
   tabs = [
     { label: 'All Issues', icon: 'file-text' },
     { label: 'My Reports', icon: 'user' },
+    { label: 'Drafts', icon: 'clock-circle' },
     { label: 'Recent Activity', icon: 'history' }
   ];
 
   ngOnInit(): void {
     this.updateFilters();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['issues'] || changes['currentUserId']) {
+      this.updateFilters();
+    }
   }
 
   onTabChange(index: number): void {
@@ -86,8 +94,13 @@ export class IssueTabsComponent implements OnInit {
       filtered = filtered.filter(issue => issue.store.id === this.storeFilter);
     }
 
-    this.filteredIssues = filtered;
-    this.myReports = this.issues.filter(issue => issue.reporterId === this.currentUserId);
+    this.filteredIssues = filtered.filter(issue => issue.status !== 'draft');
+    this.myReports = filtered.filter(
+      issue => issue.reporterId === this.currentUserId && issue.status !== 'draft'
+    );
+    this.myDrafts = filtered.filter(
+      issue => issue.reporterId === this.currentUserId && issue.status === 'draft'
+    );
   }
 
   onViewDetails(issue: IssueSubmission): void {
@@ -109,6 +122,7 @@ export class IssueTabsComponent implements OnInit {
       case 'new': return 'orange';
       case 'in-progress': return 'blue';
       case 'resolved': return 'green';
+      case 'draft': return 'default';
       default: return 'default';
     }
   }
@@ -118,6 +132,7 @@ export class IssueTabsComponent implements OnInit {
       case 'new': return 'NEW';
       case 'in-progress': return 'IN PROGRESS';
       case 'resolved': return 'RESOLVED';
+      case 'draft': return 'DRAFT';
       default: return status.toUpperCase();
     }
   }

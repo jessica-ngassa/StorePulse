@@ -1,14 +1,5 @@
-// import { Injectable } from '@angular/core';
-
-// @Injectable({
-//   providedIn: 'root',
-// })
-// export class Issue {
-  
-// }
-
 import { Injectable, computed, signal } from '@angular/core';
-import { Issue, IssueStatus } from '../../shared/models/issue.models';
+import { Attachment, Issue, IssueStatus } from '../../shared/models/issue.models';
 import { ISSUE_FIXTURES } from '../../shared/models/issue.fixtures';
 import { JiraService } from './jira.service';
 
@@ -28,6 +19,17 @@ function loadInitial(): Issue[] {
   }
 }
 
+type CreateIssueInput = Omit<Issue, 'id' | 'createdAt' | 'updatedAt' | 'jira'>;
+
+export interface DraftIssueInput {
+  reporterName: string;
+  title?: string;
+  categoryId?: string;
+  description?: string;
+  teamId?: string;
+  attachments?: Attachment[];
+}
+
 @Injectable({ providedIn: 'root' })
 export class IssueService {
   private readonly _issues = signal<Issue[]>(loadInitial());
@@ -40,9 +42,31 @@ export class IssueService {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
   }
 
-  createIssue(input: Omit<Issue, 'id' | 'createdAt' | 'updatedAt' | 'jira'>) {
-    const issue: Issue = {
+  private buildIssue(input: CreateIssueInput): Issue {
+    return {
       ...input,
+      id: crypto.randomUUID(),
+      createdAt: nowIso(),
+      updatedAt: nowIso(),
+      jira: { status: 'NOT_SENT' },
+    };
+  }
+
+  createIssue(input: CreateIssueInput) {
+    const issue = this.buildIssue(input);
+    this.persist([issue, ...this._issues()]);
+    return issue;
+  }
+
+  saveDraft(input: DraftIssueInput) {
+    const issue: Issue = {
+      reporterName: input.reporterName,
+      title: input.title?.trim() || 'Untitled Draft',
+      categoryId: input.categoryId || 'other',
+      description: input.description?.trim() || '',
+      status: 'DRAFT',
+      teamId: input.teamId || 'hardware',
+      attachments: input.attachments ?? [],
       id: crypto.randomUUID(),
       createdAt: nowIso(),
       updatedAt: nowIso(),

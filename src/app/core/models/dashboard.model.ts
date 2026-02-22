@@ -17,7 +17,7 @@ export interface IssueSubmission {
   photos: string[];
   videos: string[];
   timestamp: Date;
-  status: 'new' | 'in-progress' | 'resolved';
+  status: 'new' | 'in-progress' | 'resolved' | 'draft';
   store: Store;
   jiraId?: string;
   jiraSyncCount: number;
@@ -25,6 +25,8 @@ export interface IssueSubmission {
   priority: 'low' | 'medium' | 'high' | 'critical';
   department: string;
   deviceModel: string;
+  quarter?: string;
+  reproducibility?: 'always' | 'intermittent' | 'once' | 'unable';
   referenceAssociate?: string;
 }
 

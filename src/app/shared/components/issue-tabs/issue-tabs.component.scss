@@ -40,6 +40,7 @@
 }
 
 .tab-button {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -77,6 +78,17 @@
   &:hover:not(.active) {
     background: #f9fafb;
   }
+}
+
+.tab-notification-dot {
+  position: absolute;
+  top: 0.2rem;
+  right: 0.55rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: #f97316;
+  border: 1px solid #ffffff;
 }
 
 .filters-section {
@@ -207,6 +219,14 @@
   letter-spacing: 0.08em;
 }
 
+.issue-team--draft {
+  margin-bottom: 0.75rem;
+}
+
+.issue-title--draft {
+  color: #ea580c;
+}
+
 .issue-meta {
   display: flex;
   align-items: center;
@@ -261,6 +281,106 @@
   border: 1px solid #f3f4f6;
   border-radius: 0.75rem;
   color: #0f172a;
+}
+
+.issue-resume-btn {
+  height: 3rem;
+  padding: 0 1.25rem;
+  font-size: 1rem;
+  font-weight: 800;
+  border-radius: 0.75rem;
+  background: #ea580c;
+  border-color: #ea580c;
+}
+
+.issue-resume-btn:hover {
+  background: #c2410c;
+  border-color: #c2410c;
+}
+
+.resume-required-tag {
+  background: #ffedd5;
+  color: #c2410c;
+  border: none;
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+.drafts-empty {
+  min-height: 40vh;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 1.25rem;
+  padding: 2.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.drafts-empty__icon-wrap {
+  width: 7.5rem;
+  height: 7.5rem;
+  border-radius: 999px;
+  background: #f3f4f6;
+  display: grid;
+  place-items: center;
+}
+
+.drafts-empty__icon {
+  font-size: 3rem;
+  color: #c7ccd4;
+}
+
+.drafts-empty__title {
+  margin: 1.5rem 0 0;
+  font-size: 2.5rem;
+  line-height: 1.1;
+  font-weight: 900;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+}
+
+.drafts-empty__copy {
+  margin: 1rem 0 0;
+  max-width: 44rem;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #667085;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .drafts-empty__title {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .drafts-empty {
+    min-height: 30vh;
+    padding: 2rem 1rem;
+  }
+
+  .drafts-empty__icon-wrap {
+    width: 5rem;
+    height: 5rem;
+  }
+
+  .drafts-empty__icon {
+    font-size: 2rem;
+  }
+
+  .drafts-empty__title {
+    font-size: 1.6rem;
+  }
+
+  .drafts-empty__copy {
+    font-size: 0.95rem;
+    line-height: 1.45;
+  }
 }
 
 .activity-feed {

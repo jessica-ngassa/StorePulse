@@ -83,6 +83,174 @@
         (syncJira)="onSyncJira($event)"
         (inspect)="onInspect($event)">
       </app-issue-tabs>
+
+      <nz-modal
+        [nzVisible]="isInspectModalOpen"
+        [nzFooter]="null"
+        [nzMaskClosable]="true"
+        [nzCentered]="true"
+        [nzWidth]="1400"
+        nzWrapClassName="dashboard-inspect-modal"
+        (nzOnCancel)="closeInspectModal()"
+      >
+        <ng-container *nzModalContent>
+          <ng-container *ngIf="selectedIssue as issue">
+            <div class="inspect-modal">
+              <header class="inspect-header">
+                <div class="inspect-header__main">
+                  <div class="inspect-header__chips">
+                    <span class="inspect-chip inspect-chip--case">Case #{{ getCaseCode(issue.id) }}</span>
+                    <span class="inspect-chip" [ngClass]="getStatusClass(issue.status)">
+                      {{ getStatusText(issue.status) }}
+                    </span>
+                    <span class="inspect-chip inspect-chip--quarter">
+                      <span nz-icon nzType="calendar" nzTheme="outline"></span>
+                      {{ getQuarterLabel(issue) }}
+                    </span>
+                  </div>
+
+                  <h2 class="inspect-header__store">{{ issue.store.name }}</h2>
+                  <h3 class="inspect-header__unit">Store Unit #{{ issue.store.number }}</h3>
+                  <p class="inspect-header__address">{{ issue.store.address }}</p>
+                </div>
+
+                <button type="button" class="inspect-edit-btn" (click)="onEditRecord(issue)">
+                  <span nz-icon nzType="edit" nzTheme="outline"></span>
+                  Edit Record
+                </button>
+              </header>
+
+              <div class="inspect-body">
+                <section class="inspect-main">
+                  <div class="inspect-section">
+                    <h4 class="inspect-section__title inspect-section__title--orange">
+                      <span class="inspect-section__bar"></span>
+                      Issue Documentation
+                    </h4>
+                    <article class="inspect-doc-card">
+                      <h5>{{ issue.title }}</h5>
+                      <p>{{ issue.description }}</p>
+                    </article>
+                  </div>
+
+                  <div class="inspect-section">
+                    <h4 class="inspect-section__title inspect-section__title--blue">
+                      <span class="inspect-section__bar"></span>
+                      Visual Evidence
+                    </h4>
+                    <div class="inspect-evidence-card">
+                      <div class="inspect-evidence-grid">
+                        <div class="inspect-evidence-slot">
+                          <ng-container *ngIf="issue.photos.length > 0; else noPhotoEvidence">
+                            <img [src]="issue.photos[0]" alt="Issue photo evidence" />
+                          </ng-container>
+                          <ng-template #noPhotoEvidence>
+                            <div class="inspect-evidence-empty">
+                              <span nz-icon nzType="camera" nzTheme="outline"></span>
+                              <span>No Photos Provided</span>
+                            </div>
+                          </ng-template>
+                        </div>
+
+                        <div class="inspect-evidence-slot">
+                          <ng-container *ngIf="issue.videos.length > 0; else noVideoEvidence">
+                            <video [src]="issue.videos[0]" controls preload="metadata"></video>
+                          </ng-container>
+                          <ng-template #noVideoEvidence>
+                            <div class="inspect-evidence-empty">
+                              <span nz-icon nzType="video-camera" nzTheme="outline"></span>
+                              <span>No Videos Provided</span>
+                            </div>
+                          </ng-template>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="inspect-jira-card">
+                    <div class="inspect-jira-card__left">
+                      <div class="inspect-jira-card__icon">
+                        <span nz-icon nzType="thunderbolt" nzTheme="outline"></span>
+                      </div>
+                      <div>
+                        <p class="inspect-jira-card__id">{{ issue.jiraId || 'No Jira Link' }}</p>
+                        <p class="inspect-jira-card__meta">Enterprise Ticket Status Sync</p>
+                        <p class="inspect-jira-card__sync" *ngIf="issue.lastJiraSync">
+                          Last synced: {{ formatDetailedDate(issue.lastJiraSync) }}
+                        </p>
+                      </div>
+                    </div>
+
+                    <button type="button" class="inspect-jira-card__btn" (click)="onSyncJira(issue)">
+                      <span nz-icon nzType="sync" nzTheme="outline"></span>
+                      {{ issue.jiraId ? 'Push Update' : 'Sync Now' }}
+                    </button>
+                  </div>
+                </section>
+
+                <aside class="inspect-side">
+                  <section class="inspect-side-card">
+                    <h4 class="inspect-side-card__title">Routing Status</h4>
+                    <div class="inspect-side-row">
+                      <span>Reporter Team</span>
+                      <span class="inspect-pill inspect-pill--orange">{{ issue.team }}</span>
+                    </div>
+                    <div class="inspect-side-row inspect-side-row--blue">
+                      <span>Target Dev Team</span>
+                      <span class="inspect-pill inspect-pill--blue">{{ getTargetTeam(issue) }}</span>
+                    </div>
+                  </section>
+
+                  <section class="inspect-side-card">
+                    <h4 class="inspect-side-card__title">Hardware Context</h4>
+                    <div class="inspect-hardware-item">
+                      <span class="inspect-hardware-item__icon inspect-hardware-item__icon--orange" nz-icon nzType="appstore" nzTheme="outline"></span>
+                      <div>
+                        <p>Impacted Dept</p>
+                        <strong>{{ issue.department || 'General Store' }}</strong>
+                      </div>
+                    </div>
+                    <div class="inspect-hardware-item">
+                      <span class="inspect-hardware-item__icon inspect-hardware-item__icon--blue" nz-icon nzType="mobile" nzTheme="outline"></span>
+                      <div>
+                        <p>Device Profile</p>
+                        <strong>{{ issue.deviceModel || 'Store Hardware' }}</strong>
+                      </div>
+                    </div>
+                  </section>
+
+                  <section class="inspect-side-card">
+                    <h4 class="inspect-side-card__title">Reporting Associate</h4>
+                    <div class="inspect-reporter">
+                      <div class="inspect-reporter__avatar">
+                        {{ issue.reportedBy.charAt(0) }}
+                      </div>
+                      <div>
+                        <p class="inspect-reporter__name">{{ issue.reportedBy }}</p>
+                        <p class="inspect-reporter__meta">
+                          ASSOCIATE
+                          <span>ID: {{ getReporterIdLabel(issue.reporterId) }}</span>
+                        </p>
+                      </div>
+                    </div>
+                  </section>
+
+                  <section class="inspect-live-card">
+                    <div class="inspect-live-card__status">
+                      <span class="inspect-live-card__dot"></span>
+                      Live Status Sync
+                    </div>
+                    <p>
+                      This technical record is currently active and being monitored by the
+                      <strong>{{ issue.team }}</strong> response unit.
+                    </p>
+                  </section>
+                </aside>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+      </nz-modal>
     </div>
   </main>
 

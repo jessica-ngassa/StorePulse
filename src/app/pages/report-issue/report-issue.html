@@ -3,19 +3,48 @@
   [nzFooter]="null"
   [nzMaskClosable]="false"
   [nzWidth]="880"
-  nzWrapClassName="report-modal"
+  [nzWrapClassName]="isEditingMode ? 'report-modal report-modal--resume' : 'report-modal'"
   [nzCentered]="true"
   (nzOnCancel)="closeDialog()"
 >
   <ng-container *nzModalContent>
-    <div class="report-modal__header">
-      <div class="report-modal__title">Report Technical Issue</div>
-      <div class="report-modal__subtitle">
-        Help us route this correctly by providing detailed store info.
+    @if (isEditingMode) {
+      <div class="report-resume-header">
+        <div class="report-modal__chips">
+          <span class="report-chip report-chip--case">Case #{{ resumeCaseCode }}</span>
+          <span class="report-chip report-chip--status">{{ (form.value.status || 'draft').toUpperCase() }}</span>
+          <span class="report-chip report-chip--quarter">
+            <span nz-icon nzType="calendar" nzTheme="outline"></span>
+            {{ resumeQuarterTag }}
+          </span>
+        </div>
+
+        <h1 class="report-resume-header__store">{{ resumeStoreInfo.name }}</h1>
+        <div class="report-resume-header__unit">Store Unit #{{ resumeStoreInfo.number }}</div>
+        <div class="report-resume-header__address">{{ resumeStoreInfo.address }}</div>
       </div>
-    </div>
+    } @else {
+      <div class="report-modal__header">
+        <div class="report-modal__title">Report Technical Issue</div>
+        <div class="report-modal__subtitle">
+          Help us route this correctly by providing detailed store info.
+        </div>
+      </div>
+    }
 
     <form class="report-form" [formGroup]="form" (ngSubmit)="submit()">
+      @if (isEditingMode) {
+        <div class="report-lifecycle">
+          <label class="report-label">Current Lifecycle Status</label>
+          <nz-select formControlName="status" nzPlaceHolder="Update Status" class="report-select">
+            <nz-option nzValue="draft" nzLabel="Draft"></nz-option>
+            <nz-option nzValue="new" nzLabel="New Report"></nz-option>
+            <nz-option nzValue="in-progress" nzLabel="In Progress"></nz-option>
+            <nz-option nzValue="resolved" nzLabel="Resolved / Fixed"></nz-option>
+          </nz-select>
+        </div>
+      }
+
       <section class="report-section">
         <div class="report-section__title report-section__title--orange">
           <span class="report-section__bar report-section__bar--orange"></span>
@@ -74,7 +103,12 @@
 
           <div class="report-field">
             <label class="report-label">Specific Sub-Team</label>
-            <nz-select formControlName="subTeam" nzPlaceHolder="Pick team first" class="report-select">
+            <nz-select
+              formControlName="subTeam"
+              [nzPlaceHolder]="form.value.categoryId ? 'Select Sub-team' : 'Pick team first'"
+              [nzDisabled]="!form.value.categoryId"
+              class="report-select"
+            >
               <nz-option *ngFor="let option of subTeamOptions()" [nzValue]="option" [nzLabel]="option"></nz-option>
             </nz-select>
           </div>
@@ -153,15 +187,36 @@
         </div>
       </div>
 
-      <button
-        nz-button
-        nzType="primary"
-        class="report-submit"
-        [disabled]="form.invalid"
-        type="submit"
-      >
-        Submit Issue
-      </button>
+      <div class="report-actions">
+        @if (showSaveForLater) {
+          <button
+            nz-button
+            nzType="default"
+            class="report-save"
+            type="button"
+            (click)="saveForLater()"
+            [disabled]="!canSaveDraft"
+          >
+            {{ isSavingDraft ? 'Saving...' : 'Save for Later' }}
+          </button>
+        }
+
+        <button
+          nz-button
+          nzType="primary"
+          class="report-submit"
+          [disabled]="form.invalid || isProcessing"
+          type="submit"
+        >
+          {{
+            isProcessing
+              ? 'Processing...'
+              : (isEditingMode && form.value.status !== 'draft')
+                ? 'Update Record'
+                : 'Submit Issue'
+          }}
+        </button>
+      </div>
     </form>
   </ng-container>
 </nz-modal>

@@ -1,4 +1,4 @@
-export type IssueStatus = 'NEW' | 'IN_PROGRESS' | 'RESOLVED';
+export type IssueStatus = 'DRAFT' | 'NEW' | 'IN_PROGRESS' | 'RESOLVED';
 export type AttachmentType = 'IMAGE' | 'VIDEO';
 
 export interface Team {

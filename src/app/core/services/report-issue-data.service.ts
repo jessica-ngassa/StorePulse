@@ -5,6 +5,8 @@ import { IssueCategory, Team } from '../../shared/models/issue.models';
 export interface StoreOption {
   id: string;
   name: string;
+  address: string;
+  number: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -25,10 +27,30 @@ export class ReportIssueDataService {
     this.categories.set(CATEGORIES);
     this.teams.set(TEAMS);
     this.stores.set([
-      { id: '0121', name: 'Store #0121 - Atlanta' },
-      { id: '0122', name: 'Store #0122 - Marietta' },
-      { id: '0123', name: 'Store #0123 - Decatur' },
-      { id: '0124', name: 'Store #0124 - Buckhead' },
+      {
+        id: 's1',
+        name: 'Store #0121 - Atlanta',
+        address: '2525 Piedmont Rd NE, Atlanta, GA 30324',
+        number: '0121',
+      },
+      {
+        id: 's2',
+        name: 'Store #0122 - Marietta',
+        address: '440 Commerce Park Dr SE, Marietta, GA 30060',
+        number: '0122',
+      },
+      {
+        id: 's3',
+        name: 'Store #0123 - Decatur',
+        address: '1000 Commerce Dr, Decatur, GA 30030',
+        number: '0123',
+      },
+      {
+        id: 's4',
+        name: 'Store #0124 - Buckhead',
+        address: '2525 Piedmont Rd NE, Atlanta, GA 30324',
+        number: '0124',
+      },
     ]);
     this.quarterOptions.set(['Q1 (Feb - Apr)', 'Q2 (May - Jul)', 'Q3 (Aug - Oct)', 'Q4 (Nov - Jan)']);
     this.priorityOptions.set(['low', 'medium', 'high', 'critical']);

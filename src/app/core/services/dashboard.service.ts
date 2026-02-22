@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of, delay } from 'rxjs';
 import { IssueSubmission, ActivityLog, Store } from '../models/dashboard.model';
 
+type CreateSubmissionInput = Omit<IssueSubmission, 'id' | 'timestamp' | 'status' | 'jiraSyncCount'>;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -10,6 +12,7 @@ export class DashboardService {
     { id: 's1', name: 'Store #0121 - Atlanta', address: '2525 Piedmont Rd NE, Atlanta, GA 30324', number: '0121' },
     { id: 's2', name: 'Store #0122 - Marietta', address: '440 Commerce Park Dr SE, Marietta, GA 30060', number: '0122' },
     { id: 's3', name: 'Store #0123 - Decatur', address: '1000 Commerce Dr, Decatur, GA 30030', number: '0123' },
+    { id: 's4', name: 'Store #0124 - Buckhead', address: '2525 Piedmont Rd NE, Atlanta, GA 30324', number: '0124' },
   ];
 
   private mockSubmissions: IssueSubmission[] = [
@@ -109,16 +112,23 @@ export class DashboardService {
     return this.submissions$;
   }
 
+  getSubmissionById(id: string): IssueSubmission | undefined {
+    return this.submissionsSubject.value.find((submission) => submission.id === id);
+  }
+
   getActivities(): Observable<ActivityLog[]> {
     return this.activities$;
   }
 
-  addSubmission(submission: Omit<IssueSubmission, 'id' | 'timestamp' | 'status' | 'jiraSyncCount'>): Observable<IssueSubmission> {
+  createSubmission(
+    submission: CreateSubmissionInput,
+    status: IssueSubmission['status'] = 'new'
+  ): Observable<IssueSubmission> {
     const newSubmission: IssueSubmission = {
       ...submission,
       id: Math.random().toString(36).substr(2, 9),
       timestamp: new Date(),
-      status: 'new',
+      status,
       jiraSyncCount: 0
     };
 
@@ -126,6 +136,14 @@ export class DashboardService {
     this.submissionsSubject.next([newSubmission, ...currentSubmissions]);
 
     return of(newSubmission).pipe(delay(500));
+  }
+
+  saveDraft(submission: CreateSubmissionInput): Observable<IssueSubmission> {
+    return this.createSubmission(submission, 'draft');
+  }
+
+  addSubmission(submission: CreateSubmissionInput): Observable<IssueSubmission> {
+    return this.createSubmission(submission, 'new');
   }
 
   updateSubmission(id: string, updates: Partial<IssueSubmission>): Observable<IssueSubmission> {
