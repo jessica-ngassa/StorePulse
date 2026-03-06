@@ -1,59 +1,116 @@
 # StorePulse
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.3.
+StorePulse is an Angular 21 application built for The Home Depot store environment. It helps Aprons capture software issues while they are on the floor so the right support and engineering teams can act quickly.
 
-## Development server
+The main goal is to make in-store issue reporting simple and complete. Each report captures store context, device details, issue severity, reproduction notes, and optional media evidence so software problems can be routed and resolved with less back and forth.
 
-To start a local development server, run:
+## Project Description
 
-```bash
-ng serve
+The application is centered around a simple incident workflow:
+
+1. Associate signs in on `/login`.
+2. Associate submits or saves an issue draft on `/report`.
+3. Dashboard on `/dashboard` shows issue metrics, filters, activity, and drafts.
+4. Issue can be synced to Jira and tracked through statuses (`draft`, `new`, `in-progress`, `resolved`).
+
+Current implementation uses in-memory data services and simulated synchronization behavior, so it works like a realistic frontend prototype.
+
+## How The Application Is Structured
+
+- `pages`: Route-level screens (`login`, `report-issue`, `dashboard`).
+- `core`: Cross-cutting app logic like auth guard, domain models, and services.
+- `shared`: Reusable screen components and shared model/constants.
+- `app.routes.ts`: Route map and auth protection.
+- `app.config.ts`: Angular providers (router, network client, locale settings, and animations).
+
+## Folder Structure
+
+```text
+src/
+  app/
+    app.ts
+    app.config.ts
+    app.routes.ts
+    core/
+      guards/
+        auth.guard.ts
+      models/
+        user.model.ts
+        dashboard.model.ts
+      services/
+        auth.service.ts
+        dashboard.service.ts
+        report-issue-data.service.ts
+        jira.service.ts
+        issue.service.ts
+    pages/
+      login/
+      report-issue/
+      dashboard/
+    shared/
+      components/
+        navigation/
+        issue-tabs/
+        issue-card/
+        status-badge/
+        corporate-footer/
+      models/
+        constants.ts
+        issue.models.ts
+        issue.fixtures.ts
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Architecture Diagram
 
-## Code scaffolding
+```mermaid
+flowchart
+  store_apron[Store Apron] --> login_page[Login Page]
+  login_page --> authentication_service[Authentication Service]
+  authentication_service --> current_user_state[(Current User State)]
+  current_user_state --> route_guard[Route Guard]
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+  route_guard --> router[Router]
+  router --> report_issue_page[Report Issue Page]
+  router --> dashboard_page[Dashboard Page]
 
-```bash
-ng generate component component-name
+  report_issue_page --> report_issue_data_service[Report Issue Data Service category store option data]
+  report_issue_page --> dashboard_service[Dashboard Service]
+
+  dashboard_page --> dashboard_service
+  dashboard_page --> navigation_component[Navigation Component]
+  dashboard_page --> issue_tabs_component[Issue Tabs Component]
+
+  navigation_component --> authentication_service
+  issue_tabs_component --> dashboard_page
+
+  dashboard_service --> issue_submission_state[(Issue Submission State)]
+  dashboard_service --> activity_log_state[(Activity Log State)]
+  dashboard_service --> jira_sync[Ticket Synchronization]
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Main Connections (Who Talks To What)
+
+- Route protection checks whether the associate is signed in before opening report and dashboard pages.
+- The login page signs in the associate and stores active user information for the session.
+- The report page loads default category and store options, then creates new reports or saves drafts.
+- The dashboard page reads reports, activity history, and store data, then presents filtering and inspection actions.
+- The top navigation area allows user profile preference updates.
+- Ticket synchronization actions are triggered from the dashboard and update report history.
+
+## Run Locally
 
 ```bash
-ng generate --help
+npm install
+npm start
 ```
 
-## Building
+Open `http://localhost:4200`.
 
-To build the project run:
+## Scripts
 
 ```bash
-ng build
+npm run start   # ng serve
+npm run build   # ng build
+npm run watch   # ng build --watch --configuration development
+npm run test    # ng test (Vitest)
 ```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
